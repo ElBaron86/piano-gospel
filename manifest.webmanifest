@@ -1,0 +1,44 @@
+{
+ "name": "Piano gospel",
+ "short_name": "Piano gospel",
+ "lang": "fr",
+ "description": "Cours de piano gospel pour débutants : ateliers animés et sonores.",
+ "start_url": "./index.html",
+ "scope": "./",
+ "display": "standalone",
+ "orientation": "any",
+ "background_color": "#1B2440",
+ "theme_color": "#1B2440",
+ "icons": [
+  {
+   "src": "icons/icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png"
+  },
+  {
+   "src": "icons/icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png"
+  },
+  {
+   "src": "icons/maskable-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ],
+ "shortcuts": [
+  {
+   "name": "Atelier rythme",
+   "url": "./rythme.html"
+  },
+  {
+   "name": "Atelier harmonie",
+   "url": "./harmonie.html"
+  },
+  {
+   "name": "Atelier gospel",
+   "url": "./gospel.html"
+  }
+ ]
+}

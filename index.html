@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Piano gospel</title>
+<meta name="description" content="Cours de piano gospel pour débutants : ateliers animés et sonores.">
+<meta name="theme-color" content="#1B2440">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Piano gospel">
+<link rel="stylesheet" href="fonts/fonts.css">
+
+<style>*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0;font-size:14px}img{max-width:100%}[hidden]{display:none!important}
+.appbar{display:flex;align-items:center;gap:10px;padding-block:12px 0;font-family:var(--f-display);font-size:14px}
+.appbar a{color:var(--ink);text-decoration:none;border:1.5px solid var(--line);border-radius:999px;padding:6px 14px;background:var(--surface)}
+.appbar a:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+:root{
+  --bg:#EEF0F5; --surface:#FFFFFF; --ink:#1B2440; --muted:#59617C; --line:#D5D9E4; --soft:#E4E7EF;
+  --gold:#B47B22; --gold-soft:#F3E3C4; --coral:#C9542E; --coral-soft:#F7DACD; --teal:#2B766F; --teal-soft:#D3EAE6;
+  --violet:#5B4B8A; --violet-soft:#E2DCF0; --key:#1B2440;
+  --f-display:"Bricolage Grotesque", "Trebuchet MS", system-ui, sans-serif;
+  --f-body:"Literata", Georgia, "Times New Roman", serif;
+  --f-mono:"JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0F1320; --surface:#171E30; --ink:#E7EAF3; --muted:#9AA2BC; --line:#2B3452; --soft:#20283D;
+  --gold:#E2AB4E; --gold-soft:#3A3020; --coral:#EF7C55; --coral-soft:#43281F; --teal:#55B6AA; --teal-soft:#183531;
+  --violet:#A493DD; --violet-soft:#2A2545; --key:#E7EAF3; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0F1320; --surface:#171E30; --ink:#E7EAF3; --muted:#9AA2BC; --line:#2B3452; --soft:#20283D;
+  --gold:#E2AB4E; --gold-soft:#3A3020; --coral:#EF7C55; --coral-soft:#43281F; --teal:#55B6AA; --teal-soft:#183531;
+  --violet:#A493DD; --violet-soft:#2A2545; --key:#E7EAF3; color-scheme:dark}
+
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.55;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 40px}
+.wrap{max-width:980px;margin:0 auto}
+.hero{background:var(--ink);color:var(--bg);border-radius:0 0 18px 18px;padding:34px 24px 28px;margin:0 -16px;position:relative;overflow:hidden}
+@media (min-width:1012px){.hero{margin:0}}
+.hero .eb{font-family:var(--f-display);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-weight:700}
+.hero h1{font-family:var(--f-display);font-weight:700;font-size:clamp(38px,8vw,64px);line-height:1;margin:8px 0 10px}
+.hero p{margin:0;max-width:52ch;opacity:.85}
+.hero .kb{position:absolute;right:-10px;bottom:-6px;width:min(46%,340px);opacity:.18}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-top:22px}
+.tile{display:flex;flex-direction:column;gap:6px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;text-decoration:none;color:var(--ink);min-height:170px}
+.tile:hover,.tile:focus-visible{border-color:var(--gold);outline:none}
+.tile small{font-family:var(--f-mono);font-size:11.5px;color:var(--muted)}
+.tile b{font-family:var(--f-display);font-size:22px}
+.tile span{font-size:14.5px;color:var(--muted)}
+.tile i{font-style:normal;font-family:var(--f-display);font-size:14px;color:var(--coral);margin-top:auto}
+.row{display:flex;flex-wrap:wrap;gap:12px;margin-top:22px;align-items:stretch}
+.card{flex:1 1 280px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 18px;min-width:0}
+.card h2{font-family:var(--f-display);font-size:17px;margin:0 0 6px}
+.card ol{margin:0;padding-left:20px;font-size:14.5px}
+.btn{font-family:var(--f-display);font-weight:700;font-size:15px;border:0;border-radius:999px;padding:10px 20px;cursor:pointer;background:var(--ink);color:var(--bg);display:inline-flex;align-items:center;gap:8px;text-decoration:none;margin-top:8px}
+.btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
+.status{font-family:var(--f-display);font-size:13.5px;color:var(--muted);margin-top:16px}
+.status b{color:var(--teal)}
+footer{margin-top:26px;font-family:var(--f-display);font-size:12.5px;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<section class="hero">
+  <div class="eb">Cours de piano pour débutants</div>
+  <h1>Piano gospel</h1>
+  <p>Trois ateliers animés et sonores pour accompagner le cours : touchez, écoutez, puis jouez au piano.</p>
+  <svg class="kb" viewBox="0 0 140 60" aria-hidden="true"><g fill="#F7F2E8">
+    <rect x="0" y="0" width="19" height="60" rx="2"/><rect x="20" y="0" width="19" height="60" rx="2"/><rect x="40" y="0" width="19" height="60" rx="2"/><rect x="60" y="0" width="19" height="60" rx="2"/><rect x="80" y="0" width="19" height="60" rx="2"/><rect x="100" y="0" width="19" height="60" rx="2"/><rect x="120" y="0" width="19" height="60" rx="2"/></g>
+    <g fill="#C8923A"><rect x="13" y="0" width="12" height="36" rx="2"/><rect x="33" y="0" width="12" height="36" rx="2"/><rect x="73" y="0" width="12" height="36" rx="2"/><rect x="93" y="0" width="12" height="36" rx="2"/><rect x="113" y="0" width="12" height="36" rx="2"/></g></svg>
+</section>
+<div class="grid">
+  <a class="tile" href="rythme.html"><small>Chapitres 4 à 7 · 11 leçons</small><b>Atelier rythme</b><span>Durées, mesures, silences, métronome, méthode de l'échelle, clic sur 2 et 4, grille, swing, 6/8, push.</span><i>Ouvrir →</i></a>
+  <a class="tile" href="harmonie.html"><small>Chapitres 2, 3 et 8 à 16 · 10 leçons</small><b>Atelier harmonie</b><span>Clavier, portée, gammes, cercle des quintes, accords, progressions, modulation, main gauche, improvisation, vamp.</span><i>Ouvrir →</i></a>
+  <a class="tile" href="gospel.html"><small>Chapitres 19 à 28 · 10 leçons</small><b>Atelier gospel</b><span>Oreille, chiffres de Nashville, voicings, réharmonisation, mineur, intros et fins, shout, pédale, deux mains, carnet.</span><i>Ouvrir →</i></a>
+</div>
+<div class="row">
+  <div class="card"><h2>Le cours en PDF</h2><p style="margin:0;font-size:14.5px">88 pages, 5 parties, 28 chapitres. Chaque encadré « Voir en animation » ouvre la bonne leçon.</p>
+    <a class="btn" href="cours/Piano_gospel_cours_debutants.pdf">Ouvrir le PDF</a></div>
+  <div class="card"><h2>Installer sur la tablette</h2>
+    <ol><li>Ouvrez cette page dans Chrome.</li><li>Menu ⋮ puis « Installer l'application » (ou « Ajouter à l'écran d'accueil »).</li><li>Ouvrez-la une fois avec Internet : ensuite elle marche hors ligne.</li></ol>
+    <button class="btn" id="install" type="button" hidden>Installer maintenant</button></div>
+</div>
+<p class="status" id="status">Vérification du mode hors ligne…</p>
+<footer>Montez le son : les ateliers jouent du piano et du métronome. Le carnet de pratique est enregistré sur l'appareil.</footer>
+</div>
+<script>
+let deferred = null;
+addEventListener("beforeinstallprompt", e => { e.preventDefault(); deferred = e; document.getElementById("install").hidden = false; });
+document.getElementById("install").onclick = async () => { if (!deferred) return; deferred.prompt(); await deferred.userChoice; deferred = null; document.getElementById("install").hidden = true; };
+const st = document.getElementById("status");
+const pre = matchMedia("(display-mode: standalone)").matches ? "<b>Application installée.</b> " : "";
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("sw.js").then(() => navigator.serviceWorker.ready).then(() => {
+    st.innerHTML = pre + "<b>Prête hors ligne :</b> les trois ateliers fonctionnent sans Internet.";
+  }).catch(() => { st.textContent = "Le mode hors ligne n'est pas disponible dans ce navigateur."; });
+} else st.textContent = "Le mode hors ligne n'est pas disponible dans ce navigateur.";
+</script>
+</body>
+</html>

@@ -1,0 +1,776 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Atelier rythme · Piano gospel</title>
+<meta name="description" content="Cours de piano gospel pour débutants : ateliers animés et sonores.">
+<meta name="theme-color" content="#1B2440">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Piano gospel">
+<link rel="stylesheet" href="fonts/fonts.css">
+
+<style>*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0;font-size:14px}img{max-width:100%}[hidden]{display:none!important}
+.appbar{display:flex;align-items:center;gap:10px;padding-block:12px 0;font-family:var(--f-display);font-size:14px}
+.appbar a{color:var(--ink);text-decoration:none;border:1.5px solid var(--line);border-radius:999px;padding:6px 14px;background:var(--surface)}
+.appbar a:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+
+/* Mise en page : en-tête + bande clavier, menu des leçons défilant, puis leçon en deux colonnes (texte | scène animée) qui s'empilent sur téléphone. */
+:root{
+  --bg:#EEF0F5; --surface:#FFFFFF; --ink:#1B2440; --muted:#59617C; --line:#D5D9E4; --soft:#E4E7EF;
+  --gold:#B47B22; --gold-soft:#F3E3C4; --coral:#C9542E; --coral-soft:#F7DACD; --teal:#2B766F; --teal-soft:#D3EAE6;
+  --violet:#5B4B8A; --violet-soft:#E2DCF0; --key:#1B2440;
+  --f-display:"Bricolage Grotesque", "Trebuchet MS", system-ui, sans-serif;
+  --f-body:"Literata", Georgia, "Times New Roman", serif;
+  --f-mono:"JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0F1320; --surface:#171E30; --ink:#E7EAF3; --muted:#9AA2BC; --line:#2B3452; --soft:#20283D;
+  --gold:#E2AB4E; --gold-soft:#3A3020; --coral:#EF7C55; --coral-soft:#43281F; --teal:#55B6AA; --teal-soft:#183531;
+  --violet:#A493DD; --violet-soft:#2A2545; --key:#E7EAF3; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0F1320; --surface:#171E30; --ink:#E7EAF3; --muted:#9AA2BC; --line:#2B3452; --soft:#20283D;
+  --gold:#E2AB4E; --gold-soft:#3A3020; --coral:#EF7C55; --coral-soft:#43281F; --teal:#55B6AA; --teal-soft:#183531;
+  --violet:#A493DD; --violet-soft:#2A2545; --key:#E7EAF3; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.55;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 48px}
+.wrap{max-width:1120px;margin:0 auto}
+header{padding-block:28px 0}
+.eyebrow{font-family:var(--f-display);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-weight:700}
+h1{font-family:var(--f-display);font-weight:700;font-size:clamp(30px,5vw,46px);line-height:1.05;margin:6px 0 8px;text-wrap:balance}
+.sub{color:var(--muted);max-width:62ch;margin:0}
+.keys{height:14px;margin-top:20px;border-radius:3px;
+  background:
+   repeating-linear-gradient(90deg,transparent 0 calc(100%/42*1 - 1px),var(--line) calc(100%/42*1 - 1px) calc(100%/42*1)),
+   var(--surface);border:1px solid var(--line);position:relative;overflow:hidden}
+.keys::after{content:"";position:absolute;inset:0 0 45% 0;
+  background:repeating-linear-gradient(90deg,
+   transparent 0 1.6%, var(--key) 1.6% 3.0%, transparent 3.0% 4.0%, var(--key) 4.0% 5.4%, transparent 5.4% 8.8%,
+   var(--key) 8.8% 10.2%, transparent 10.2% 11.3%, var(--key) 11.3% 12.7%, transparent 12.7% 13.8%, var(--key) 13.8% 15.2%, transparent 15.2% 16.67%)}
+nav{margin-top:18px;overflow-x:auto;scrollbar-width:thin;padding-bottom:6px}
+nav ol{list-style:none;display:flex;gap:8px;margin:0;padding:0;width:max-content}
+nav a{display:flex;flex-direction:column;gap:1px;text-decoration:none;color:var(--ink);background:var(--surface);
+  border:1px solid var(--line);border-radius:10px;padding:8px 12px;min-width:118px}
+nav a small{font-family:var(--f-mono);font-size:10.5px;color:var(--muted);letter-spacing:.02em}
+nav a span{font-family:var(--f-display);font-weight:500;font-size:14px;line-height:1.2}
+nav a[aria-current="page"]{border-color:var(--gold);box-shadow:inset 0 -3px 0 var(--gold)}
+nav a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+main{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:28px;margin-top:22px;align-items:start}
+@media (max-width:860px){main{grid-template-columns:minmax(0,1fr)}}
+.text{min-width:0}
+.text .ref{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+.text h2{font-family:var(--f-display);font-weight:700;font-size:28px;line-height:1.1;margin:4px 0 12px;text-wrap:balance}
+.text p{margin:0 0 12px;max-width:62ch}
+.text h3{font-family:var(--f-display);font-size:15px;font-weight:700;margin:18px 0 6px;color:var(--teal)}
+.text ol{margin:0;padding-left:22px}
+.text li{margin-bottom:6px}
+.legend{display:flex;flex-wrap:wrap;gap:10px 16px;font-size:13px;color:var(--muted);margin-top:14px;font-family:var(--f-display)}
+.legend i{display:inline-block;width:22px;height:12px;border-radius:3px;vertical-align:-1px;margin-right:6px}
+.stage{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;min-width:0}
+.readout{display:flex;align-items:center;gap:16px;min-height:86px}
+.big{font-family:var(--f-mono);font-weight:700;font-size:56px;line-height:1;min-width:2.6ch;text-align:center;color:var(--ink);transition:transform .06s}
+.big.dim{color:var(--muted);opacity:.55}
+.big.pulse{transform:scale(1.12)}
+.state{font-family:var(--f-display);font-size:15px;color:var(--muted);line-height:1.3}
+.state b{color:var(--ink);font-weight:700;display:block;font-size:17px}
+.tracks{margin-top:12px;display:flex;flex-direction:column;gap:10px}
+.lname{font-family:var(--f-display);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;display:flex;justify-content:space-between}
+.lbody{position:relative;height:46px;background:var(--soft);border-radius:8px;overflow:hidden}
+.lbody.short{height:34px}
+.gl{position:absolute;top:0;bottom:0;width:1px;background:var(--line)}
+.gl.beat{background:color-mix(in srgb,var(--muted) 45%,transparent)}
+.gl.bar{width:2px;background:var(--ink);opacity:.55}
+.blk{position:absolute;top:7px;bottom:7px;border-radius:6px;background:var(--teal-soft);border:1.5px solid var(--teal);
+  display:flex;align-items:center;padding-left:16px;font-family:var(--f-display);font-size:12px;color:var(--ink);white-space:nowrap;overflow:hidden;transition:background .08s}
+.blk::before{content:"";position:absolute;left:4px;top:50%;width:9px;height:9px;margin-top:-4.5px;border-radius:50%;background:var(--teal)}
+.blk.on{background:color-mix(in srgb,var(--teal) 38%,var(--surface))}
+.blk.hit::before{transform:scale(1.7)}
+.blk.c2{background:var(--gold-soft);border-color:var(--gold)} .blk.c2::before{background:var(--gold)} .blk.c2.on{background:color-mix(in srgb,var(--gold) 40%,var(--surface))}
+.blk.c3{background:var(--violet-soft);border-color:var(--violet)} .blk.c3::before{background:var(--violet)} .blk.c3.on{background:color-mix(in srgb,var(--violet) 40%,var(--surface))}
+.blk.c4{background:var(--coral-soft);border-color:var(--coral)} .blk.c4::before{background:var(--coral)} .blk.c4.on{background:color-mix(in srgb,var(--coral) 40%,var(--surface))}
+.blk.rest{background:repeating-linear-gradient(135deg,transparent 0 6px,color-mix(in srgb,var(--muted) 22%,transparent) 6px 8px);border:1.5px dashed var(--muted);color:var(--muted);padding-left:6px}
+.blk.rest::before{display:none}
+.blk.rest.on{background:repeating-linear-gradient(135deg,transparent 0 6px,color-mix(in srgb,var(--muted) 40%,transparent) 6px 8px)}
+.blk .tie{position:absolute;top:2px;bottom:2px;border-left:2px dotted var(--teal)}
+.acc{position:absolute;top:-1px;font-family:var(--f-mono);font-weight:700;font-size:13px;color:var(--coral);transform:translateX(-2px)}
+.ph{position:absolute;top:0;bottom:0;width:2px;background:var(--coral);left:0;will-change:transform;pointer-events:none;opacity:0}
+.playing .ph{opacity:1}
+.syl{display:flex;margin-top:2px;position:relative}
+.syl span{flex:1 1 0;min-width:0;text-align:center;font-family:var(--f-mono);font-size:12px;color:var(--muted);padding:4px 0;border-radius:5px}
+.syl span.b{color:var(--ink);font-weight:700}
+.syl span.on{background:var(--gold);color:#fff}
+.controls{display:flex;flex-wrap:wrap;gap:12px 18px;align-items:center;margin-top:16px;padding-top:14px;border-top:1px solid var(--line)}
+.btn{font-family:var(--f-display);font-weight:700;font-size:15px;border:0;border-radius:999px;padding:10px 20px;cursor:pointer;background:var(--ink);color:var(--bg);display:inline-flex;align-items:center;gap:8px}
+.btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line);font-weight:500;padding:8px 14px}
+.btn.ok{background:var(--teal);color:#fff}
+.btn.ko{background:transparent;color:var(--coral);border:1.5px solid var(--coral)}
+.tempo{display:flex;align-items:center;gap:10px;flex:1 1 240px;min-width:0}
+.tempo input{flex:1;min-width:0;accent-color:var(--gold)}
+.tempo output{font-family:var(--f-mono);font-size:14px;white-space:nowrap}
+.chips{display:flex;flex-wrap:wrap;gap:6px;width:100%}
+.chips button{font-family:var(--f-display);font-size:13.5px;border:1.5px solid var(--line);background:transparent;color:var(--ink);border-radius:999px;padding:6px 12px;cursor:pointer}
+.chips button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.toggles{display:flex;flex-wrap:wrap;gap:6px 14px;font-family:var(--f-display);font-size:13.5px;color:var(--muted)}
+.toggles label{display:flex;gap:6px;align-items:center;cursor:pointer}
+.toggles input{accent-color:var(--gold)}
+.note{font-size:13.5px;color:var(--muted);margin-top:10px;font-family:var(--f-display)}
+/* métronome */
+.metro{display:grid;grid-template-columns:auto minmax(0,1fr);gap:22px;align-items:center}
+@media (max-width:520px){.metro{grid-template-columns:minmax(0,1fr)} .metro svg{margin:0 auto}}
+.metro svg{width:170px;height:auto;display:block}
+.bpm{font-family:var(--f-mono);font-weight:700;font-size:58px;line-height:1}
+.bpm small{font-size:15px;color:var(--muted);font-weight:500;margin-left:6px}
+.tname{font-family:var(--f-display);font-size:18px;margin-top:2px}
+.zone{font-size:13px;color:var(--violet);font-family:var(--f-display);min-height:20px}
+.dots{display:flex;gap:10px;margin-top:14px}
+.dots span{width:26px;height:26px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+.dots span.on{background:var(--coral);border-color:var(--coral);color:#fff}
+.dots span.first.on{background:var(--gold);border-color:var(--gold)}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:12px}
+select{font-family:var(--f-display);font-size:14px;padding:6px 8px;border-radius:8px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink)}
+/* échelle */
+.ladder{display:flex;align-items:flex-end;gap:6px;height:150px;margin-top:8px}
+.ladder div{flex:1 1 0;min-width:0;background:var(--teal-soft);border-radius:5px 5px 0 0;position:relative;display:flex;justify-content:center}
+.ladder div span{position:absolute;top:-20px;font-family:var(--f-mono);font-size:11px;color:var(--muted)}
+.ladder div.done{background:var(--teal)}
+.ladder div.cur{background:var(--gold)}
+.ladder div.cur span{color:var(--ink);font-weight:700}
+.pips{display:flex;gap:8px;align-items:center;font-family:var(--f-display);font-size:14px;color:var(--muted)}
+.pips i{width:16px;height:16px;border-radius:50%;border:2px solid var(--teal);display:inline-block}
+.pips i.on{background:var(--teal)}
+.msg{font-family:var(--f-display);font-size:15px;min-height:24px;margin-top:10px}
+.fields{display:flex;flex-wrap:wrap;gap:10px 16px;font-family:var(--f-display);font-size:13.5px;color:var(--muted)}
+.fields label{display:flex;flex-direction:column;gap:3px}
+.fields input{width:90px;font-family:var(--f-mono);font-size:14px;padding:5px 8px;border-radius:8px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink)}
+footer{margin-top:36px;font-size:13px;color:var(--muted);font-family:var(--f-display)}
+@media (prefers-reduced-motion:reduce){.big{transition:none}.blk{transition:none}}
+</style>
+</head>
+<body>
+
+
+<div class="wrap">
+<div class="appbar"><a href="index.html">← Accueil</a></div>
+<header>
+  <div class="eyebrow">Piano gospel · partie 2 du cours</div>
+  <h1>Atelier rythme</h1>
+  <p class="sub">Les figures du chapitre rythme, en mouvement et avec le son. Lancez une leçon, écoutez, puis jouez ou tapez dans les mains en même temps. Le trait rouge avance avec la musique ; la case dorée montre ce qu'il faut compter.</p>
+  <p style="font-family:var(--f-display);font-size:13.5px;margin:8px 0 0">Les notes, les accords et les progressions sont dans l'<a style="color:var(--coral)" href="harmonie.html" >Atelier harmonie ↗</a></p>
+  <div class="keys" aria-hidden="true"></div>
+  <nav aria-label="Leçons"><ol id="nav"></ol></nav>
+</header>
+<main id="main"></main>
+<footer>Astuce : mettez un casque ou montez le son. Le clic aigu marque le premier temps de la mesure.</footer>
+</div>
+
+<script>
+/* ------------------------------------------------------------------ audio */
+const AU = {
+  ctx: null, out: null,
+  ensure() {
+    if (!this.ctx) {
+      const C = window.AudioContext || window.webkitAudioContext;
+      this.ctx = new C();
+      const comp = this.ctx.createDynamicsCompressor();
+      this.out = this.ctx.createGain();
+      this.out.gain.value = 0.85;
+      this.out.connect(comp); comp.connect(this.ctx.destination);
+    }
+    if (this.ctx.state === "suspended") this.ctx.resume();
+    return this.ctx;
+  },
+  click(t, lvl) {
+    const c = this.ctx, o = c.createOscillator(), g = c.createGain();
+    o.type = "sine"; o.frequency.value = [880, 1250, 1760][lvl];
+    const v = [0.16, 0.42, 0.65][lvl];
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(v, t + 0.002);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.055);
+    o.connect(g); g.connect(this.out); o.start(t); o.stop(t + 0.07);
+  },
+  note(t, freqs, dur, vel) {
+    const c = this.ctx, len = Math.min(Math.max(dur, 0.12), 3);
+    for (const f of freqs) {
+      for (const [type, mult, amp] of [["triangle", 1, 1], ["sine", 2, 0.22]]) {
+        const o = c.createOscillator(), g = c.createGain();
+        o.type = type; o.frequency.value = f * mult;
+        const a = vel * amp / Math.sqrt(freqs.length);
+        g.gain.setValueAtTime(0.0001, t);
+        g.gain.exponentialRampToValueAtTime(a, t + 0.006);
+        g.gain.exponentialRampToValueAtTime(a * 0.4, t + 0.16);
+        g.gain.exponentialRampToValueAtTime(a * 0.14, t + Math.max(0.2, len - 0.03));
+        g.gain.exponentialRampToValueAtTime(0.0001, t + len + 0.06);
+        o.connect(g); g.connect(this.out); o.start(t); o.stop(t + len + 0.08);
+      }
+    }
+  }
+};
+
+/* ------------------------------------------------------------- transport */
+class Transport {
+  constructor() { this.on = false; }
+  start(cfg) {
+    this.stop(true);
+    const c = AU.ensure();
+    this.cfg = cfg; this.spb = 60 / cfg.bpm;
+    this.t0 = c.currentTime + 0.15; this.k = 0; this.i = 0; this.on = true;
+    this.ev = [...cfg.events].sort((a, b) => a.t - b.t);
+    this.timer = setInterval(() => this.tick(), 25);
+    this.tick();
+    const draw = () => {
+      if (!this.on) return;
+      const p = (AU.ctx.currentTime - this.t0) / this.spb;
+      cfg.frame(p < 0 ? -1 : p % cfg.L, p);
+      this.raf = requestAnimationFrame(draw);
+    };
+    this.raf = requestAnimationFrame(draw);
+  }
+  tick() {
+    if (!this.ev.length) return;
+    const c = AU.ctx, ahead = c.currentTime + 0.14;
+    for (let guard = 0; guard < 500; guard++) {
+      const e = this.ev[this.i];
+      const time = this.t0 + (this.k * this.cfg.L + e.t) * this.spb;
+      if (time > ahead) break;
+      if (time >= c.currentTime - 0.03) e.play(time, this.spb);
+      this.i++;
+      if (this.i >= this.ev.length) { this.i = 0; this.k++; }
+    }
+  }
+  setBpm(b) {
+    if (!this.on) return;
+    const c = AU.ctx, p = (c.currentTime - this.t0) / this.spb, ns = 60 / b;
+    this.t0 = c.currentTime - p * ns; this.spb = ns;
+  }
+  stop(silent) {
+    const was = this.on;
+    this.on = false; clearInterval(this.timer); cancelAnimationFrame(this.raf);
+    if (was && this.cfg && this.cfg.onStop && !silent) this.cfg.onStop();
+  }
+}
+const TR = new Transport();
+
+/* ---------------------------------------------------------------- données */
+const N = {G2:98, A2:110, C3:130.81, E3:164.81, F2:87.31, G3:196, A3:220, C4:261.63, D4:293.66, E4:329.63, F4:349.23,
+  G4:392, A4:440, B4:493.88, C5:523.25, D5:587.33, E5:659.25};
+const CH_C = [N.E4, N.G4, N.C5], CH_F = [N.F4, N.A4, N.C5], CH_G = [N.D4, N.G4, N.B4];
+const restName = d => ({4: "pause", 2: "demi-pause", 1: "soupir", 0.5: "demi-soupir"})[d] || "silence";
+
+function syllables(beats, bars, sub, kind) {
+  const out = [];
+  for (let b = 0; b < bars; b++) for (let p = 0; p < beats; p++) for (let s = 0; s < sub; s++) {
+    const n = String(p + 1);
+    if (kind === "68") { out.push(String(p * sub + s + 1)); continue; }
+    if (kind === "123") { out.push(String(s + 1)); continue; }
+    if (kind === "trio") { out.push(["tri", "o", "let"][s]); continue; }
+    if (kind === "swing") { out.push([n, "", "et"][s]); continue; }
+    if (sub === 1) out.push(n);
+    else if (sub === 2) out.push(s ? "et" : n);
+    else if (sub === 4) out.push([n, "e", "et", "a"][s]);
+    else out.push(s ? "·" : n);
+  }
+  return out;
+}
+const seq = (start, step, n, d, extra) => Array.from({length: n}, (_, i) => [start + i * step, d ?? step, extra ? {...extra} : {}]);
+
+/* lane: {label, col, count, f (fréquences), ev: [[t, d, {rest, acc, text, split, f}]]} */
+function P(name, beats, bars, sub, lanes, opt = {}) {
+  return {name, beats, bars, sub, lanes, syll: opt.syll || syllables(beats, bars, sub, opt.kind),
+    clicks: opt.clicks || "all", hints: opt.hints, ref: opt.ref};
+}
+
+const LESSONS = [
+{ id: "durees", nav: "Ch. 4 · fig. 10", title: "Les durées",
+  ref: "Chapitre 4 · Fig. 10, l'arbre des valeurs",
+  intro: `<p>Les cinq lignes remplissent <b>la même mesure de 4 temps</b>. Seul le nombre de notes change : chaque figure vaut la moitié de celle du dessus.</p>
+  <p>Le point au début d'une barre colorée, c'est le moment où l'on <b>appuie</b> sur la touche. La longueur de la barre, c'est le temps pendant lequel on <b>garde la touche enfoncée</b>.</p>`,
+  steps: ["Lancez avec « Toutes » : écoutez comment les lignes se superposent.",
+    "Choisissez une seule ligne (par exemple « Blanches ») et tapez-la dans les mains en comptant les cases dorées.",
+    "Passez d'une ligne à l'autre sans arrêter : le tempo ne change pas, seul le nombre de notes change."],
+  bpm: 60, min: 40, max: 120, subClick: false,
+  patterns: (() => {
+    const L = [
+      {label: "Ronde · 4 temps", col: 4, f: [N.C4], ev: [[0, 4, {}]]},
+      {label: "Blanches · 2 temps", col: 2, f: [N.E4], ev: seq(0, 2, 2)},
+      {label: "Noires · 1 temps", col: 1, f: [N.G4], ev: seq(0, 1, 4)},
+      {label: "Croches · ½ temps", col: 3, f: [N.C5], ev: seq(0, .5, 8)},
+      {label: "Doubles croches · ¼ temps", col: 1, f: [N.E5], ev: seq(0, .25, 16)},
+    ];
+    const names = ["Toutes", "Ronde", "Blanches", "Noires", "Croches", "Doubles"];
+    return names.map((nm, i) => P(nm, 4, 1, 4, L.map((l, j) => ({...l, mute: i > 0 && j !== i - 1, count: i > 0 && j === i - 1}))));
+  })() },
+
+{ id: "mesures", nav: "Ch. 4 · fig. 12–14", title: "Compter les mesures",
+  ref: "Chapitre 4 · Fig. 12, 13 et 14 (page 15 du PDF)",
+  intro: `<p>Une <b>mesure</b>, c'est un petit paquet de temps qui revient toujours. En 2/4 on compte 1-2, en 3/4 on compte 1-2-3, en 4/4 on compte 1-2-3-4. Le trait noir vertical, c'est la barre de mesure : après elle, on recommence à 1.</p>
+  <p>Les chiffres <b>entre parenthèses</b> de la partition, ce sont les temps où la note <b>continue de sonner</b>. On ne rejoue pas, mais on compte quand même. Ici, ils s'affichent entre parenthèses et en gris pendant que la barre colorée continue.</p>`,
+  steps: ["Choisissez 2/4 et lancez. Dites les chiffres à voix haute avec la case dorée.",
+    "Quand le grand chiffre devient gris entre parenthèses, gardez les mains jointes (ou la touche enfoncée) et dites le chiffre plus doucement.",
+    "Faites pareil en 3/4 puis en 4/4. Le pied tape sur chaque clic, sans jamais s'arrêter."],
+  bpm: 60, min: 40, max: 110, subClick: false,
+  patterns: [
+    P("2/4 · fig. 12", 2, 3, 1, [{label: "Vos mains", col: 1, count: true, f: [N.G4], ev: [[0,1,{}],[1,1,{}],[2,1,{}],[3,1,{}],[4,2,{text:"blanche"}]]}]),
+    P("3/4 · fig. 13", 3, 3, 1, [{label: "Vos mains", col: 1, count: true, f: [N.G4], ev: [[0,1,{}],[1,1,{}],[2,1,{}],[3,2,{text:"blanche"}],[5,1,{}],[6,3,{text:"blanche pointée"}]]}]),
+    P("4/4 · fig. 14", 4, 3, 1, [{label: "Vos mains", col: 1, count: true, f: [N.G4], ev: [[0,1,{}],[1,1,{}],[2,1,{}],[3,1,{}],[4,2,{text:"blanche"}],[6,2,{text:"blanche"}],[8,4,{text:"ronde"}]]}]),
+  ] },
+
+{ id: "silences", nav: "Ch. 4 · fig. 11", title: "Les silences",
+  ref: "Chapitre 4 · Fig. 11 et encadré « Couleur gospel »",
+  intro: `<p>Un silence, c'est une durée où l'on <b>ne joue pas</b>, mais où l'on <b>continue de compter</b>. Sur l'animation, les zones hachurées sont des silences : le chiffre reste affiché en gris, la musique continue d'avancer.</p>
+  <p>Le dernier exemple montre les <b>stops</b> du gospel : des accords courts, coupés net, séparés par des silences précis. C'est le silence qui donne l'énergie.</p>`,
+  steps: ["« Soupirs » : jouez sur les cases colorées, levez les mains sur les cases hachurées tout en comptant.",
+    "« Pause » : quatre temps de silence complets. Comptez 1-2-3-4 sans accélérer.",
+    "« Stops gospel » : relâchez l'accord exactement au début de chaque zone hachurée."],
+  bpm: 66, min: 40, max: 120, subClick: false,
+  patterns: [
+    P("Soupirs", 4, 2, 2, [{label: "Vos mains", col: 1, count: true, f: [N.G4], ev: [[0,1,{}],[1,1,{rest:1}],[2,1,{}],[3,1,{rest:1}],[4,2,{}],[6,2,{rest:1}]]}]),
+    P("Pause", 4, 2, 1, [{label: "Vos mains", col: 1, count: true, f: [N.G4], ev: [[0,1,{}],[1,1,{}],[2,1,{}],[3,1,{}],[4,4,{rest:1}]]}]),
+    P("Stops gospel", 4, 2, 2, [
+      {label: "Main droite · accord de Do", col: 4, count: true, f: CH_C, ev: [[0,.5,{acc:1}],[.5,1,{rest:1}],[1.5,.5,{acc:1}],[2,2,{rest:1}],[4,.5,{acc:1}],[4.5,.5,{rest:1}],[5,.5,{acc:1}],[5.5,2.5,{rest:1}]]},
+      {label: "Main gauche", col: 2, f: [N.C3], ev: [[0,.5,{}],[1.5,.5,{}],[4,.5,{}],[5,.5,{}]]}]),
+  ] },
+
+{ id: "metronome", nav: "Ch. 5 · fig. 15", title: "Le métronome", custom: "metro",
+  ref: "Chapitre 5 · Fig. 15 et « Comment le régler »",
+  intro: `<p>Le métronome fait un <b>clic régulier</b>. Le nombre affiché est le tempo en <b>BPM</b> (battements par minute) : 60 BPM = un clic par seconde. En général, <b>un clic = un temps</b>.</p>
+  <p>Le clic aigu (cercle doré) marque le <b>premier temps</b> de chaque mesure. Les subdivisions ajoutent des petits clics entre les temps : très utile pour placer les croches.</p>`,
+  steps: ["Réglez 60 BPM, lancez, et écoutez 4 clics en comptant « 1, 2, 3, 4 ».",
+    "Sur le « 1 » suivant, jouez une note par clic (exercice 1 du PDF). Si le clic disparaît sous votre note, vous êtes en place.",
+    "Activez « croches » : chaque temps est coupé en deux. Jouez deux notes par clic (exercice 2)."] },
+
+{ id: "echelle", nav: "Ch. 5 · fig. 16", title: "La méthode de l'échelle", custom: "ladder",
+  ref: "Chapitre 5 · Fig. 16",
+  intro: `<p>On ne gagne pas en vitesse en jouant vite. On gagne en jouant <b>juste un peu plus vite</b>, palier par palier.</p>
+  <p>Jouez votre passage avec le métronome. À chaque passage sans erreur, cliquez « Propre ». Au bout de <b>trois passages propres d'affilée</b>, l'atelier monte le tempo tout seul. Une erreur remet le compteur à zéro.</p>`,
+  steps: ["Choisissez un tempo de départ où vous jouez sans hésiter (souvent plus lent que vous ne le pensez).",
+    "Lancez le métronome et jouez le passage. Cliquez « Propre » ou « Erreur » après chaque essai.",
+    "Le lendemain, recommencez quelques paliers en dessous de votre record."] },
+
+{ id: "backbeat", nav: "Ch. 5 et 7 · fig. 18", title: "Le clic sur 2 et 4",
+  ref: "Chapitre 5 · Fig. 18 et chapitre 7 « Les temps 2 et 4 »",
+  intro: `<p>Dans le gospel, la pulsation qui « balance » tombe sur les temps <b>2 et 4</b> : c'est là que l'assemblée frappe dans les mains.</p>
+  <p>Comparez les deux réglages. Avec « Clic sur 2 et 4 », le métronome se tait sur 1 et 3 : c'est votre main gauche qui les tient. Sur un vrai métronome, on obtient ça en réglant <b>la moitié du tempo</b> (40 pour jouer à 80) et en imaginant que chaque clic est un 2 ou un 4.</p>`,
+  steps: ["Écoutez d'abord « Clic sur chaque temps », puis « Clic sur 2 et 4 » : sentez la différence.",
+    "Décochez « Entendre les notes » et jouez vous-même : main gauche (Do, Sol) sur 1 et 3, accord de main droite sur 2 et 4, en même temps que le clic.",
+    "Frappez des mains uniquement sur les clics en comptant les quatre temps à voix haute."],
+  bpm: 80, min: 50, max: 130, subClick: false,
+  patterns: (() => {
+    const lanes = [
+      {label: "Main droite · accord sur 2 et 4", col: 4, f: CH_C, ev: [[1,1,{acc:1}],[3,1,{acc:1}],[5,1,{acc:1}],[7,1,{acc:1}]]},
+      {label: "Main gauche · basse sur 1 et 3", col: 2, f: [N.C3], ev: [[0,1,{}],[2,1,{f:[N.G2]}],[4,1,{}],[6,1,{f:[N.G2]}]]}];
+    const hints = ["main gauche", "clic + main droite", "main gauche", "clic + main droite"];
+    return [P("Clic sur chaque temps", 4, 2, 1, lanes, {hints: ["main gauche", "main droite", "main gauche", "main droite"]}),
+            P("Clic sur 2 et 4", 4, 2, 1, lanes, {clicks: "backbeat", hints})];
+  })() },
+
+{ id: "grille", nav: "Ch. 6 · fig. 19, 22, 23", title: "La grille à 16 cases",
+  ref: "Chapitre 6 · Fig. 19, 22 et 23",
+  intro: `<p>Chaque temps est coupé en <b>quatre cases</b> : on compte « 1 e et a, 2 e et a… ». Chaque note démarre dans une case précise. Lire un rythme devient alors une simple question de position.</p>
+  <p>La <b>syncope</b> démarre sur un « et » (entre deux clics) et continue par-dessus le temps suivant. Les petits chevrons rouges sont des accents : on appuie un peu plus fort.</p>`,
+  steps: ["« Noires » puis « Croches » : dites toute la grille à voix haute, en appuyant sur les chiffres.",
+    "« Syncope » : tapez seulement les cases colorées. Les notes 2 et 3 tombent entre les clics.",
+    "« Doubles croches » : quatre notes par clic, puis une croche suivie de deux doubles (« 3 … et a »)."],
+  bpm: 60, min: 40, max: 110, subClick: true,
+  patterns: [
+    P("Noires", 4, 1, 4, [{label: "Vos mains", col: 1, count: true, f: [N.G4], ev: seq(0, 1, 4)}]),
+    P("Croches", 4, 1, 4, [{label: "Vos mains", col: 1, count: true, f: [N.G4], ev: seq(0, .5, 8)}]),
+    P("Syncope", 4, 1, 4, [{label: "Vos mains", col: 4, count: true, f: [N.G4], ev: [[0,1.5,{}],[1.5,1,{acc:1}],[2.5,.5,{acc:1}],[3,1,{}]]}]),
+    P("Doubles croches", 4, 1, 4, [{label: "Vos mains", col: 3, count: true, f: [N.G4], ev: [[0,.25,{}],[.25,.25,{}],[.5,.25,{}],[.75,.25,{}],[1,1,{}],[2,.5,{}],[2.5,.25,{}],[2.75,.25,{}],[3,1,{}]]}]),
+  ] },
+
+{ id: "pointee", nav: "Ch. 6 · fig. 20–21", title: "Point et liaison",
+  ref: "Chapitre 6 · Fig. 20 et 21",
+  intro: `<p>Le <b>point</b> ajoute la moitié de la valeur : une noire pointée dure un temps et demi. Elle est presque toujours suivie d'une croche qui tombe sur le « et ».</p>
+  <p>La <b>liaison</b> soude deux notes de même hauteur : on joue la première et on la garde pendant la seconde. Sur l'animation, le pointillé vertical montre l'endroit où la partition écrit deux notes, mais on n'appuie qu'une fois.</p>`,
+  steps: ["« Noire pointée + croche » : écoutez le rythme long-court, puis tapez-le en comptant « 1 (2) et 3 (4) et ».",
+    "« Liaisons » : jouez seulement sur les points colorés. Au pointillé, ne rejouez pas.",
+    "Réglez 50 BPM et jouez les deux exemples au piano, sur un Do."],
+  bpm: 60, min: 40, max: 110, subClick: false,
+  patterns: [
+    P("Noire pointée + croche", 4, 2, 2, [{label: "Vos mains", col: 1, count: true, f: [N.G4], ev: [[0,1.5,{text:"1½ t."}],[1.5,.5,{}],[2,1.5,{text:"1½ t."}],[3.5,.5,{}],[4,3,{text:"blanche pointée"}],[7,1,{}]]}]),
+    P("Liaisons", 4, 2, 1, [{label: "Vos mains", col: 2, count: true, f: [N.G4], ev: [[0,1,{}],[1,1,{}],[2,2,{split:[1],text:"liée"}],[4,3,{split:[2],text:"liée"}],[7,1,{}]]}]),
+  ] },
+
+{ id: "swing", nav: "Ch. 6–7 · fig. 24, 26", title: "Droit, triolet, swing",
+  ref: "Chapitre 6 · Fig. 24 et chapitre 7 · Fig. 26",
+  intro: `<p><b>Croches droites</b> : le temps est coupé en deux parts égales. <b>Triolet</b> : le temps est coupé en trois parts égales.</p>
+  <p>Le <b>swing</b>, c'est un triolet dont on lie les deux premières notes : une note longue, une note courte. C'est le balancement du shuffle et de nombreux chants gospel. Passez d'un réglage à l'autre pendant la lecture pour l'entendre.</p>`,
+  steps: ["Lancez « Croches droites », puis cliquez sur « Swing » sans arrêter : la deuxième note de chaque temps arrive plus tard.",
+    "« Triolets » : comptez « tri-o-let » sur chaque clic.",
+    "Revenez au swing et chantez « dou-ba, dou-ba » : longue-courte, longue-courte."],
+  bpm: 72, min: 50, max: 140, subClick: false,
+  patterns: [
+    P("Croches droites", 4, 1, 2, [{label: "Vos mains", col: 1, count: true, f: [N.G4], ev: seq(0, .5, 8)}]),
+    P("Triolets", 4, 1, 3, [{label: "Vos mains", col: 3, count: true, f: [N.G4], ev: seq(0, 1/3, 12)}], {kind: "trio"}),
+    P("Swing", 4, 1, 3, [{label: "Vos mains", col: 3, count: true, f: [N.G4], ev: [0,1,2,3].flatMap(b => [[b, 2/3, {}], [b + 2/3, 1/3, {}]])}], {kind: "swing"}),
+  ] },
+
+{ id: "ternaire", nav: "Ch. 7 · fig. 27", title: "6/8 et 12/8",
+  ref: "Chapitre 7 · Fig. 27 et étude « Plus haut »", unit: "noire pointée",
+  intro: `<p>En <b>6/8</b>, une mesure contient six croches groupées en <b>deux grands temps de trois</b>. On compte 1-2-3-4-5-6, en appuyant sur 1 et 4. Ici, le clic du métronome tombe sur ces grands temps.</p>
+  <p>Le <b>12/8</b> contient quatre grands temps de trois croches. C'est le balancement ample des ballades et des adorations gospel.</p>`,
+  steps: ["« 6/8 » : comptez 1-2-3-4-5-6 avec la case dorée, plus fort sur 1 et 4.",
+    "« Longue-courte » : c'est le rythme de l'étude « Plus haut ». Jouez l'accord Mi-Sol-Ré sur chaque point coloré.",
+    "« 12/8 » : comptez 1-2-3, 2-2-3, 3-2-3, 4-2-3 et balancez le corps sur chaque grand temps."],
+  bpm: 54, min: 36, max: 90, subClick: true,
+  patterns: [
+    P("6/8 · six croches", 2, 2, 3, [{label: "Vos mains", col: 1, count: true, f: [N.G4], ev: seq(0, 1/3, 12).map(([t, d], i) => [t, d, {acc: i % 3 === 0 ? 1 : 0}])}], {kind: "68"}),
+    P("6/8 · longue-courte", 2, 2, 3, [
+      {label: "Main droite · Mi-Sol-Ré", col: 3, count: true, f: [N.E4, N.G4, N.D5], ev: [0,1,2,3].flatMap(b => [[b, 2/3, {acc:1}], [b + 2/3, 1/3, {}]])},
+      {label: "Main gauche", col: 2, f: [N.C3], ev: [[0,2,{}],[2,2,{f:[N.E3]}]]}], {kind: "68"}),
+    P("12/8", 4, 1, 3, [
+      {label: "Main droite", col: 1, count: true, f: CH_C, ev: seq(0, 1/3, 12).map(([t, d], i) => [t, d, {acc: i % 3 === 0 ? 1 : 0}])},
+      {label: "Main gauche", col: 2, f: [N.C3], ev: [[0,2,{}],[2,2,{f:[N.G2]}]]}], {kind: "123"}),
+  ] },
+
+{ id: "push", nav: "Ch. 6 · fig. 25", title: "Le push",
+  ref: "Chapitre 6 · Fig. 25",
+  intro: `<p>Dans le gospel, on joue souvent le nouvel accord <b>une croche avant</b> la barre de mesure, sur le « 4 et », puis on le garde. Cette anticipation donne de l'élan.</p>
+  <p>Comparez les deux versions : sans anticipation, Fa arrive pile sur le 1. Avec le push, il arrive un demi-temps plus tôt, et la main gauche reste sur le 1.</p>`,
+  steps: ["Écoutez « Sans anticipation », puis « Avec push » : repérez le moment où l'accord de Fa arrive.",
+    "Décochez « Entendre les notes » et jouez vous-même : Do (3 temps et demi), puis Fa sur le « 4 et ».",
+    "Inversez : Fa, puis Do anticipé."],
+  bpm: 76, min: 50, max: 120, subClick: false,
+  patterns: [
+    P("Sans anticipation", 4, 2, 2, [
+      {label: "Main droite", col: 4, count: true, f: CH_C, ev: [[0,4,{text:"C"}],[4,4,{text:"F",f:CH_F}]]},
+      {label: "Main gauche", col: 2, f: [N.C3], ev: [[0,4,{text:"Do"}],[4,4,{text:"Fa",f:[N.F2]}]]}]),
+    P("Avec push", 4, 2, 2, [
+      {label: "Main droite", col: 4, count: true, f: CH_C, ev: [[0,3.5,{text:"C"}],[3.5,4.5,{text:"F anticipé",f:CH_F,acc:1}]]},
+      {label: "Main gauche", col: 2, f: [N.C3], ev: [[0,4,{text:"Do"}],[4,4,{text:"Fa",f:[N.F2]}]]}]),
+  ] },
+];
+
+/* ------------------------------------------------------------- utilitaires */
+const $ = (s, el = document) => el.querySelector(s);
+const h = (tag, attrs = {}, html = "") => { const e = document.createElement(tag); for (const k in attrs) e.setAttribute(k, attrs[k]); e.innerHTML = html; return e; };
+const store = { get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} } };
+function tempoName(b) { return b <= 60 ? "Largo" : b <= 76 ? "Adagio" : b <= 108 ? "Andante" : b <= 120 ? "Moderato" : b <= 160 ? "Allegro" : "Presto"; }
+function gospelZone(b) { return b >= 58 && b <= 78 ? "zone ballade / adoration" : b >= 115 && b <= 150 ? "zone praise / shout" : ""; }
+
+/* ------------------------------------------------------------- navigation */
+const nav = $("#nav");
+LESSONS.forEach((l, i) => {
+  const li = h("li");
+  li.append(h("a", {href: "#" + l.id}, `<small>${String(i + 1).padStart(2, "0")} · ${l.nav}</small><span>${l.title}</span>`));
+  nav.append(li);
+});
+
+function textCol(l) {
+  return `<div class="text"><div class="ref">${l.ref}</div><h2>${l.title}</h2>${l.intro}
+    <h3>À faire au piano</h3><ol>${l.steps.map(s => `<li>${s}</li>`).join("")}</ol></div>`;
+}
+
+/* -------------------------------------------------------- leçon rythmique */
+function rhythmLesson(l, root) {
+  let pi = 0, bpm = l.bpm, playing = false;
+  const opts = {click: true, notes: true, sub: l.subClick};
+  const stage = h("section", {class: "stage", "aria-label": "Animation"});
+  root.append(stage);
+  stage.innerHTML = `
+    <div class="readout"><div class="big" id="big">1</div><div class="state" id="st"><b>Prêt</b>Lancez la lecture pour voir et entendre le rythme.</div></div>
+    <div class="tracks" id="tracks"></div>
+    <div class="controls">
+      <button class="btn" id="play" type="button">▶ Lancer</button>
+      <div class="tempo"><label for="tempo-${l.id}" class="note" style="margin:0">Tempo</label>
+        <input type="range" id="tempo-${l.id}" min="${l.min}" max="${l.max}" step="1" value="${bpm}">
+        <output id="tv"></output></div>
+      <div class="chips" role="group" aria-label="Exemples" id="chips"></div>
+      <div class="toggles">
+        <label><input type="checkbox" id="o-click-${l.id}" ${opts.click ? "checked" : ""}> Entendre le clic</label>
+        <label><input type="checkbox" id="o-notes-${l.id}" checked> Entendre les notes</label>
+        <label><input type="checkbox" id="o-sub-${l.id}" ${opts.sub ? "checked" : ""}> Clics de subdivision</label>
+      </div>
+    </div>
+    <div class="legend">
+      <span><i style="background:var(--teal-soft);border:1.5px solid var(--teal)"></i>note : le point = on appuie, la barre = on tient</span>
+      <span><i style="background:repeating-linear-gradient(135deg,transparent 0 4px,var(--line) 4px 6px);border:1.5px dashed var(--muted)"></i>silence : on compte sans jouer</span>
+      <span><i style="background:var(--gold)"></i>ce qu'il faut dire</span>
+    </div>`;
+  const tv = $("#tv", stage), big = $("#big", stage), st = $("#st", stage), tracks = $("#tracks", stage), playBtn = $("#play", stage);
+  const showTempo = () => { tv.textContent = l.unit ? `${l.unit} = ${bpm}` : `${bpm} BPM · ${tempoName(bpm)}`; };
+  showTempo();
+
+  const chips = $("#chips", stage);
+  l.patterns.forEach((p, i) => {
+    const b = h("button", {type: "button", "aria-pressed": i === pi ? "true" : "false"}, p.name);
+    b.onclick = () => { pi = i; chips.querySelectorAll("button").forEach((x, j) => x.setAttribute("aria-pressed", j === i ? "true" : "false")); build(); if (playing) startPlay(); };
+    chips.append(b);
+  });
+
+  let blocks = [], phs = [], cells = [], cur;
+  function build() {
+    cur = l.patterns[pi];
+    const L = cur.beats * cur.bars;
+    tracks.innerHTML = ""; blocks = []; phs = [];
+    for (const lane of cur.lanes) {
+      const wrap = h("div");
+      wrap.append(h("div", {class: "lname"}, `<span>${lane.label}</span>${lane.mute ? "<span>muet</span>" : ""}`));
+      const body = h("div", {class: "lbody"});
+      if (lane.mute) body.style.opacity = ".45";
+      for (let s = 0; s <= L * cur.sub; s++) {
+        const t = s / cur.sub; if (t >= L) break;
+        const cls = t % cur.beats === 0 ? "gl bar" : Number.isInteger(+t.toFixed(6)) ? "gl beat" : "gl";
+        if (s === 0) continue;
+        const g = h("div", {class: cls}); g.style.left = (t / L * 100) + "%"; body.append(g);
+      }
+      for (const [t, d, o] of lane.ev) {
+        const b = h("div", {class: "blk" + (o.rest ? " rest" : " c" + lane.col)});
+        b.style.left = `calc(${t / L * 100}% + 2px)`; b.style.width = `calc(${d / L * 100}% - 4px)`;
+        b.textContent = o.rest ? restName(d) : (o.text || "");
+        if (o.split) for (const sp of o.split) { const tl = h("div", {class: "tie"}); tl.style.left = (sp / d * 100) + "%"; b.append(tl); }
+        body.append(b);
+        if (o.acc && !o.rest) { const a = h("div", {class: "acc"}, "&gt;"); a.style.left = `calc(${t / L * 100}% + 3px)`; body.append(a); }
+        blocks.push({el: b, t, d, rest: !!o.rest, lane});
+      }
+      const ph = h("div", {class: "ph"}); body.append(ph); phs.push(ph);
+      wrap.append(body); tracks.append(wrap);
+    }
+    const syl = h("div", {class: "syl", "aria-hidden": "true"});
+    cells = cur.syll.map((s, i) => { const c = h("span", {class: i % cur.sub === 0 ? "b" : ""}, s || "&nbsp;"); syl.append(c); return c; });
+    tracks.append(syl);
+    big.textContent = cur.syll[0]; big.classList.remove("dim");
+  }
+  build();
+
+  function events() {
+    const p = cur, L = p.beats * p.bars, ev = [];
+    for (let k = 0; k < L; k++) {
+      const inBar = k % p.beats;
+      let lvl = null;
+      if (p.clicks === "backbeat") { if (inBar === 1 || inBar === 3) lvl = 2; }
+      else lvl = inBar === 0 ? 2 : 1;
+      if (lvl !== null) ev.push({t: k, play: tm => { if (opts.click) AU.click(tm, lvl); }});
+      for (let s = 1; s < p.sub; s++) ev.push({t: k + s / p.sub, play: tm => { if (opts.sub && opts.click) AU.click(tm, 0); }});
+    }
+    for (const lane of p.lanes) for (const [t, d, o] of lane.ev) {
+      if (o.rest) continue;
+      ev.push({t, play: (tm, spb) => { if (opts.notes && !lane.mute) AU.note(tm, o.f || lane.f, d * spb * 0.95, o.acc ? 0.55 : 0.38); }});
+    }
+    return ev;
+  }
+
+  let lastCell = -1;
+  function frame(pos) {
+    const L = cur.beats * cur.bars;
+    if (pos < 0) return;
+    const pct = pos / L;
+    for (const ph of phs) ph.style.transform = `translateX(${pct * ph.parentElement.clientWidth}px)`;
+    for (const b of blocks) {
+      const on = pos >= b.t && pos < b.t + b.d;
+      b.el.classList.toggle("on", on);
+      b.el.classList.toggle("hit", on && !b.rest && pos - b.t < 0.12);
+    }
+    const ci = Math.min(cells.length - 1, Math.floor(pos * cur.sub + 1e-6));
+    if (ci !== lastCell) {
+      if (lastCell >= 0 && cells[lastCell]) cells[lastCell].classList.remove("on");
+      cells[ci].classList.add("on"); lastCell = ci;
+      updateReadout(ci, pos);
+    }
+  }
+  function updateReadout(ci, pos) {
+    const s = cur.syll[ci] || "·";
+    const refLane = cur.lanes.find(x => x.count);
+    big.classList.remove("pulse");
+    if (refLane) {
+      const e = refLane.ev.find(([t, d]) => pos >= t - 1e-6 && pos < t + d - 1e-6);
+      if (!e) { big.textContent = s; big.classList.add("dim"); st.innerHTML = "<b>…</b>"; return; }
+      const [t, d, o] = e;
+      const startCell = Math.round(t * cur.sub);
+      if (o.rest) { big.textContent = s; big.classList.add("dim"); st.innerHTML = `<b>Silence</b>on compte sans jouer (${restName(d)})`; }
+      else if (startCell === ci) { big.textContent = s; big.classList.remove("dim"); void big.offsetWidth; big.classList.add("pulse"); st.innerHTML = `<b>On joue</b>${o.split ? "une seule fois pour toute la barre" : "on appuie sur la touche"}`; }
+      else { big.textContent = s && s !== "·" ? `(${s})` : "…"; big.classList.add("dim"); st.innerHTML = `<b>On tient</b>la note continue, on compte plus doucement`; }
+    } else {
+      big.textContent = s; big.classList.toggle("dim", ci % cur.sub !== 0);
+      const beatInBar = Math.floor(pos) % cur.beats;
+      st.innerHTML = cur.hints ? `<b>${cur.hints[beatInBar]}</b>` : "<b>Comptez</b>chaque ligne remplit la même mesure";
+    }
+  }
+
+  function startPlay() {
+    lastCell = -1; cells.forEach(c => c.classList.remove("on"));
+    TR.start({bpm, L: cur.beats * cur.bars, events: events(), frame, onStop: stopUI});
+    playing = true; stage.classList.add("playing"); playBtn.textContent = "■ Arrêter";
+  }
+  function stopUI() {
+    playing = false; stage.classList.remove("playing"); playBtn.textContent = "▶ Lancer";
+    blocks.forEach(b => b.el.classList.remove("on", "hit"));
+  }
+  playBtn.onclick = () => { if (playing) TR.stop(); else startPlay(); };
+  const tempo = $(`#tempo-${l.id}`, stage);
+  tempo.oninput = () => { bpm = +tempo.value; showTempo(); TR.setBpm(bpm); };
+  $(`#o-click-${l.id}`, stage).onchange = e => opts.click = e.target.checked;
+  $(`#o-notes-${l.id}`, stage).onchange = e => opts.notes = e.target.checked;
+  $(`#o-sub-${l.id}`, stage).onchange = e => opts.sub = e.target.checked;
+}
+
+/* --------------------------------------------------------------- métronome */
+function metronomeView(root, embedded) {
+  const S = {bpm: 60, beats: 4, sub: 1, accent: true, playing: false};
+  const stage = h("section", {class: "stage", "aria-label": "Métronome"});
+  root.append(stage);
+  stage.innerHTML = `
+  <div class="metro">
+    <svg viewBox="0 0 160 220" role="img" aria-label="Métronome à balancier">
+      <polygon points="30,210 130,210 104,22 56,22" fill="var(--gold-soft)" stroke="var(--gold)" stroke-width="2"/>
+      <polygon points="44,196 116,196 98,40 62,40" fill="var(--surface)" stroke="var(--line)" stroke-width="1"/>
+      ${[0,1,2,3,4,5,6,7].map(i => `<line x1="76" x2="84" y1="${52 + i * 17}" y2="${52 + i * 17}" stroke="var(--muted)" stroke-width="1"/>`).join("")}
+      <g id="arm"><line x1="80" y1="186" x2="80" y2="34" stroke="var(--ink)" stroke-width="3" stroke-linecap="round"/>
+        <rect id="weight" x="70" y="90" width="20" height="16" rx="3" fill="var(--coral)"/></g>
+      <circle cx="80" cy="186" r="6" fill="var(--ink)"/>
+    </svg>
+    <div>
+      <div class="bpm"><span id="bv">60</span><small>BPM</small></div>
+      <div class="tname" id="tn">Largo</div>
+      <div class="zone" id="zn"></div>
+      <div class="dots" id="dots"></div>
+    </div>
+  </div>
+  <div class="controls">
+    <button class="btn" id="mplay" type="button">▶ Lancer</button>
+    <button class="btn ghost" id="minus" type="button" aria-label="Moins 1 BPM">−1</button>
+    <div class="tempo"><input type="range" id="mt" min="40" max="208" step="1" value="60" aria-label="Tempo"></div>
+    <button class="btn ghost" id="plus" type="button" aria-label="Plus 1 BPM">+1</button>
+    <button class="btn ghost" id="tap" type="button">Taper le tempo</button>
+    <div class="row" style="margin:0">
+      <label class="note" style="margin:0" for="msig">Mesure</label>
+      <select id="msig"><option value="2">2/4</option><option value="3">3/4</option><option value="4" selected>4/4</option></select>
+      <label class="note" style="margin:0" for="msub">Subdivision</label>
+      <select id="msub"><option value="1">aucune</option><option value="2">croches</option><option value="3">triolets</option><option value="4">doubles croches</option></select>
+      <label class="toggles"><input type="checkbox" id="macc" checked> Clic aigu sur le 1</label>
+    </div>
+  </div>
+  <p class="note">« Taper le tempo » : tapez quatre fois au rythme d'un chant que vous avez en tête, l'atelier trouve son BPM.</p>`;
+  const arm = $("#arm", stage), weight = $("#weight", stage), dots = $("#dots", stage);
+  const bv = $("#bv", stage), tn = $("#tn", stage), zn = $("#zn", stage), mt = $("#mt", stage), btn = $("#mplay", stage);
+  function drawDots() { dots.innerHTML = ""; for (let i = 0; i < S.beats; i++) dots.append(h("span", {class: i === 0 ? "first" : ""}, i + 1)); }
+  function setBpm(b) {
+    S.bpm = Math.max(40, Math.min(208, Math.round(b)));
+    bv.textContent = S.bpm; tn.textContent = tempoName(S.bpm); zn.textContent = gospelZone(S.bpm); mt.value = S.bpm;
+    weight.setAttribute("y", 40 + (208 - S.bpm) / 168 * 110);
+    TR.setBpm(S.bpm);
+  }
+  drawDots(); setBpm(60);
+  let lastBeat = -1;
+  function events() {
+    const ev = [];
+    for (let k = 0; k < S.beats; k++) {
+      ev.push({t: k, play: tm => AU.click(tm, k === 0 && S.accent ? 2 : 1)});
+      for (let s = 1; s < S.sub; s++) ev.push({t: k + s / S.sub, play: tm => AU.click(tm, 0)});
+    }
+    return ev;
+  }
+  function frame(pos, p) {
+    if (pos < 0) return;
+    arm.setAttribute("transform", `rotate(${24 * Math.cos(Math.PI * p)} 80 186)`);
+    const b = Math.floor(pos);
+    if (b !== lastBeat) { dots.querySelectorAll("span").forEach((d, i) => d.classList.toggle("on", i === b)); lastBeat = b; }
+  }
+  function start() { lastBeat = -1; TR.start({bpm: S.bpm, L: S.beats, events: events(), frame, onStop: stopUI}); S.playing = true; btn.textContent = "■ Arrêter"; }
+  function stopUI() { S.playing = false; btn.textContent = "▶ Lancer"; arm.setAttribute("transform", "rotate(0 80 186)"); dots.querySelectorAll("span").forEach(d => d.classList.remove("on")); }
+  btn.onclick = () => S.playing ? TR.stop() : start();
+  mt.oninput = () => setBpm(+mt.value);
+  $("#minus", stage).onclick = () => setBpm(S.bpm - 1);
+  $("#plus", stage).onclick = () => setBpm(S.bpm + 1);
+  $("#msig", stage).onchange = e => { S.beats = +e.target.value; drawDots(); if (S.playing) start(); };
+  $("#msub", stage).onchange = e => { S.sub = +e.target.value; if (S.playing) start(); };
+  $("#macc", stage).onchange = e => S.accent = e.target.checked;
+  let taps = [];
+  $("#tap", stage).onclick = () => {
+    const now = performance.now(); taps = taps.filter(t => now - t < 2500); taps.push(now);
+    if (taps.length >= 2) { const iv = (taps[taps.length - 1] - taps[0]) / (taps.length - 1); setBpm(60000 / iv); }
+  };
+  return {setBpm, start, isPlaying: () => S.playing, S};
+}
+
+/* --------------------------------------------------------------- échelle */
+function ladderView(root) {
+  const saved = store.get("echelle", {start: 60, target: 88, step: 3, record: 0});
+  const S = {...saved, cur: saved.start, clean: 0, errs: 0};
+  const m = metronomeView(root);
+  const stage = h("section", {class: "stage", "aria-label": "Échelle de tempo", style: "margin-top:16px"});
+  root.append(stage);
+  stage.innerHTML = `
+    <div class="fields">
+      <label>Départ (BPM)<input type="number" id="ls" min="40" max="200" value="${S.start}"></label>
+      <label>Objectif (BPM)<input type="number" id="lt" min="40" max="208" value="${S.target}"></label>
+      <label>Palier<select id="lp"><option value="3">+3 BPM</option><option value="4">+4 BPM</option></select></label>
+    </div>
+    <div class="ladder" id="lad" style="margin-top:34px"></div>
+    <div class="controls">
+      <button class="btn ok" id="good" type="button">✓ Propre</button>
+      <button class="btn ko" id="bad" type="button">✗ Erreur</button>
+      <div class="pips" id="pips"><span>Passages propres</span><i></i><i></i><i></i></div>
+      <button class="btn ghost" id="down" type="button">Redescendre d'un palier</button>
+    </div>
+    <div class="msg" id="msg"></div>
+    <p class="note" id="rec"></p>`;
+  $("#lp", stage).value = S.step;
+  const lad = $("#lad", stage), msg = $("#msg", stage);
+  function steps() { const a = []; for (let b = S.start; b < S.target; b += S.step) a.push(b); a.push(S.target); return a; }
+  function draw() {
+    const st = steps(); lad.innerHTML = "";
+    const lo = st[0], hi = st[st.length - 1];
+    st.forEach(b => {
+      const d = h("div", {class: b < S.cur ? "done" : b === S.cur ? "cur" : ""}, `<span>${b}</span>`);
+      d.style.height = (30 + (b - lo) / Math.max(1, hi - lo) * 70) + "%"; lad.append(d);
+    });
+    $("#pips", stage).querySelectorAll("i").forEach((p, i) => p.classList.toggle("on", i < S.clean));
+    $("#rec", stage).textContent = S.record ? `Votre record enregistré sur cet appareil : ${S.record} BPM.` : "";
+  }
+  function save() { store.set("echelle", {start: S.start, target: S.target, step: S.step, record: S.record}); }
+  function go(b) { S.cur = b; m.setBpm(b); draw(); }
+  function reset() { const st = steps(); go(st.includes(S.cur) ? S.cur : st[0]); }
+  $("#ls", stage).onchange = e => { S.start = Math.max(40, Math.min(200, +e.target.value || 60)); S.cur = S.start; S.clean = 0; save(); reset(); };
+  $("#lt", stage).onchange = e => { S.target = Math.max(S.start + 1, Math.min(208, +e.target.value || 88)); S.clean = 0; save(); reset(); };
+  $("#lp", stage).onchange = e => { S.step = +e.target.value; S.cur = S.start; S.clean = 0; save(); reset(); };
+  $("#good", stage).onclick = () => {
+    S.clean++; S.errs = 0;
+    if (S.clean >= 3) {
+      S.clean = 0;
+      if (S.cur > S.record) { S.record = S.cur; save(); }
+      const st = steps(), i = st.indexOf(S.cur);
+      if (i < st.length - 1) { go(st[i + 1]); msg.textContent = `Bravo : trois passages propres. Nouveau palier : ${S.cur} BPM.`; }
+      else { draw(); msg.textContent = `Objectif atteint à ${S.cur} BPM. Arrêtez-vous là pour aujourd'hui.`; }
+    } else { draw(); msg.textContent = `Propre (${S.clean}/3). Rejouez au même tempo.`; }
+  };
+  $("#bad", stage).onclick = () => {
+    S.clean = 0; S.errs++; draw();
+    msg.textContent = S.errs >= 2 ? "Deux erreurs à ce palier : redescendez d'un cran, puis remontez." : "Pas grave : le compteur repart à zéro, même tempo.";
+  };
+  $("#down", stage).onclick = () => { const st = steps(), i = st.indexOf(S.cur); S.clean = 0; S.errs = 0; go(st[Math.max(0, i - 1)]); msg.textContent = `Retour à ${S.cur} BPM.`; };
+  go(S.cur);
+}
+
+/* ---------------------------------------------------------------- routage */
+const main = $("#main");
+function route() {
+  TR.stop(true);
+  const id = (location.hash || "").slice(1);
+  const l = LESSONS.find(x => x.id === id) || LESSONS.find(x => x.id === "mesures");
+  nav.querySelectorAll("a").forEach(a => { if (a.getAttribute("href") === "#" + l.id) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current"); });
+  const cur = nav.querySelector('[aria-current="page"]'); if (cur) cur.scrollIntoView({block: "nearest", inline: "center"});
+  main.innerHTML = textCol(l);
+  const col = h("div", {style: "min-width:0"}); main.append(col);
+  if (l.custom === "metro") metronomeView(col);
+  else if (l.custom === "ladder") ladderView(col);
+  else rhythmLesson(l, col);
+}
+window.addEventListener("hashchange", route);
+document.addEventListener("visibilitychange", () => { if (document.hidden) TR.stop(); });
+route();
+</script>
+
+<script>
+if ("serviceWorker" in navigator) addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
+</script>
+</body>
+</html>

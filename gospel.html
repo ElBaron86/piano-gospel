@@ -257,7 +257,7 @@ table.log button{background:none;border:0;color:var(--coral);font-size:16px;curs
 <header>
   <div class="eyebrow">Piano gospel · partie 5 du cours</div>
   <h1>Atelier gospel</h1>
-  <p class="sub">Pour aller plus loin : l'oreille, les grilles en chiffres, les voicings, la réharmonisation, le mineur, les formules d'église, le shout, la pédale, l'indépendance des mains et votre carnet de pratique.</p>
+  <p class="sub">Pour aller plus loin : l'oreille, les grilles en chiffres, les voicings, la réharmonisation, le mineur, les formules d'église, le shout, la pédale, l'indépendance des mains, votre carnet de pratique, les arpèges et les runs.</p>
   <p class="cross">Voir aussi l'<a href="rythme.html" >Atelier rythme ↗</a> et l'<a href="harmonie.html" >Atelier harmonie ↗</a></p>
   <div class="keys" aria-hidden="true"></div>
   <nav aria-label="Leçons"><ol id="nav"></ol></nav>
@@ -503,7 +503,7 @@ function Keyboard(lo, hi, opt = {}) {
       const mm = +m, black = isBlack(mm);
       const show = mode !== "none" && (!black || lit[mm]);
       labels[mm].textContent = show ? name(mm) : "";
-      labels[mm].classList.toggle("on", !!lit[mm] && !black);
+      labels[mm].classList.toggle("on", !!lit[mm] && !black && !/soft|dim/.test(lit[mm]));
     }
   }
   function light(m, cls) {
@@ -662,6 +662,9 @@ const LESSONS = [
 { id: "carnet", nav: "Ch. 28 · fig. 85", title: "Carnet de pratique", ref: "Chapitre 28",
   intro: `<p>Vos fiches de chant et vos séances, enregistrées <b>sur cet appareil</b>. Notez la tonalité, le tempo, la grille en chiffres et l'état de chaque chant ; consignez chaque séance avec sa durée et le tempo atteint.</p><p>Utilisez « Exporter » de temps en temps pour garder une copie.</p>`,
   steps: ["Créez une fiche pour le chant que vous apprenez.", "Après chaque séance, ajoutez une ligne au journal.", "Une fois par mois, regardez le total et passez les chants maîtrisés en « Maîtrisé »."] },
+{ id: "arpeges", nav: "Ch. 29 · fig. 86–96", title: "Arpèges et runs", ref: "Chapitre 29",
+  intro: `<p>Trois onglets. <b>Arpèges</b> : choisissez un accord, une main et un motif ; les doigtés s'affichent sur les touches et la note jouée s'allume en rouge. <b>Runs gospel</b> : les traits du chapitre 29, à écouter lentement puis à vitesse réelle, dans toutes les tonalités. <b>Progression arpégée</b> : une grille avec la main gauche en arpège.</p>`,
+  steps: ["Arpège de Do, main droite, 2 octaves, en croches à 60 BPM : jouez avec l'atelier.", "Montez de 4 BPM après trois passages propres, puis passez aux doubles croches.", "Écoutez chaque run lentement, jouez-le, puis essayez-le à vitesse réelle à la fin d'un refrain."] },
 ];
 
 const nav = $("#nav");
@@ -1268,9 +1271,165 @@ function viewCarnet(root) {
   render();
 }
 
+
+/* ---------------------------------------------------------- 11 · arpèges */
+const ARPQ = {maj: [0, 4, 7], m: [0, 3, 7], "7": [0, 4, 7, 10], maj7: [0, 4, 7, 11], m7: [0, 3, 7, 10], add9: [0, 2, 4, 7]};
+const ARPQN = {maj: "", m: "m", "7": "7", maj7: "maj7", m7: "m7", add9: "add9"};
+function arpFingers(notes, ivs, hand) {
+  /* doigtés en montant ; null si la position n'est pas standard */
+  const n = ivs.length, black = m => isBlack(m), out = [];
+  const rootBlack = black(notes[0]);
+  if (hand === "MD") {
+    if (!rootBlack) { notes.forEach((m, i) => out.push(i === notes.length - 1 ? 5 : (i % n) + 1)); return out; }
+    const w = ivs.findIndex(iv => !black(notes[0] + iv));
+    notes.forEach((m, i) => {
+      const k = i % n;
+      if (i === notes.length - 1) out.push(black(m) && w >= 0 ? 4 : 5);
+      else if (w < 0) out.push([2, 3, 4, 4][k]);
+      else if (i === 0) out.push(2);
+      else if (k >= w) out.push(1 + (k - w));
+      else out.push(n === 3 ? 4 : n - w + 1 + k);
+    });
+    return out;
+  }
+  if (rootBlack) return null;
+  const first = n === 3 ? [5, 4, 2] : [5, 4, 3, 2], next = n === 3 ? [1, 4, 2] : [1, 4, 3, 2];
+  notes.forEach((m, i) => out.push(i === notes.length - 1 ? 1 : (i < n ? first[i] : next[i % n])));
+  return out;
+}
+const RUNS = [
+  {n: "Descendant sur add9", f: "fig. 93", pre: [0, [0, 4, 7, 14]], notes: [[19, .25], [16, .25], [14, .25], [12, .25], [7, .25], [4, .25], [2, .25], [0, .25]], land: [5, [0, 4, 7]]},
+  {n: "Pentatonique montant", f: "fig. 94", pre: [0, [0, 4, 7]], notes: [[0, .25], [2, .25], [4, .25], [7, .25], [9, .25], [12, .25], [14, .25], [16, .25]], land: [0, [0, 4, 7], 19]},
+  {n: "Avec la note bleue", f: "fig. 95", pre: [5, [0, 4, 7]], notes: [[9, .25], [12, .25], [15, .1], [16, .4], [19, .25], [21, .25], [24, .5]], land: [0, [0, 4, 7]]},
+  {n: "Cascade à deux mains", f: "fig. 96", pre: null, notes: [[-24, .5], [-17, .5], [-12, .5], [-8, .5], [4, .5], [7, .5], [12, .5], [16, .5]], land: [0, [0, 4, 7], 19]},
+  {n: "Triolets descendants", f: "chapitre 29", pre: [0, [0, 4, 7]], notes: [[24, 1 / 3], [19, 1 / 3], [16, 1 / 3], [21, 1 / 3], [16, 1 / 3], [12, 1 / 3], [19, 1 / 3], [14, 1 / 3], [12, 1 / 3], [16, 1 / 3], [12, 1 / 3], [7, 1 / 3]], land: [5, [0, 4, 7]]},
+];
+function viewArpeges(root) {
+  const st = stageEl(root, "Arpèges");
+  let mode = 0, rootPc = 0, q = "maj", hand = 0, motif = 0, oct = 2, sub = 2, bpm = 60, run = 0, slow = true, prog = 0, lhPat = 0, playing = false;
+  let fmap = {};
+  st.innerHTML = `<div class="readout"><div class="big" id="ab" style="font-size:48px;min-width:2ch">·</div><div class="state" id="as"><b>Prêt</b>Choisissez un accord et lancez.</div></div>`;
+  const kb = Keyboard(36, 88, {labels: "fr", nameFn: m => fmap[m] !== undefined ? String(fmap[m]) : SHARP_FR[((m % 12) + 12) % 12]});
+  st.append(kbBox(kb));
+  const tabs = chips(["Arpèges", "Runs gospel", "Progression arpégée"], 0, i => { mode = i; TR.stop(); controls(); }, "Mode");
+  tabs.style.marginTop = "14px"; st.append(tabs);
+  const box = h("div", {class: "controls"}); st.append(box);
+  const pb = h("button", {class: "btn", type: "button"}, "▶ Lancer");
+  function setPlaying(v) { playing = v; pb.textContent = v ? "■ Arrêter" : "▶ Lancer"; }
+  pb.onclick = () => playing ? TR.stop() : start();
+  const tempoEl = () => {
+    const t = h("div", {class: "tempo"}, `<label class="note" for="ar-t" style="margin:0">Tempo</label><input type="range" id="ar-t" min="40" max="140" step="1" value="${bpm}"><output id="ar-to">${bpm} BPM</output>`);
+    t.querySelector("input").oninput = e => { bpm = +e.target.value; t.querySelector("output").textContent = bpm + " BPM"; TR.setBpm(bpm); };
+    return t;
+  };
+  const upBtn = () => { const b = h("button", {class: "btn ghost", type: "button"}, "+4 BPM"); b.onclick = () => { bpm = Math.min(140, bpm + 4); const r = $("#ar-t", st); if (r) { r.value = bpm; $("#ar-to", st).textContent = bpm + " BPM"; } TR.setBpm(bpm); }; return b; };
+  function controls() {
+    box.innerHTML = ""; box.append(pb);
+    if (mode === 0) {
+      const qs = h("select", {id: "ar-q", "aria-label": "Type d'accord"}); Object.keys(ARPQ).forEach(k => qs.append(h("option", {value: k}, k === "maj" ? "majeur" : k === "m" ? "mineur" : k)));
+      qs.value = q; qs.onchange = () => { q = qs.value; preview(); };
+      const os = h("select", {id: "ar-o", "aria-label": "Octaves"}, `<option value="1">1 octave</option><option value="2">2 octaves</option>`); os.value = oct; os.onchange = () => { oct = +os.value; preview(); };
+      const ss = h("select", {id: "ar-s", "aria-label": "Valeur des notes"}, `<option value="2">croches</option><option value="3">triolets</option><option value="4">doubles croches</option>`); ss.value = sub; ss.onchange = () => { sub = +ss.value; if (playing) start(); };
+      box.append(lab("ar-r", "Accord"), keySelect("ar-r", rootPc, k => { rootPc = k.pc; preview(); }), qs, os, ss, tempoEl(), upBtn(),
+        chips(["Main droite", "Main gauche", "Deux mains (cascade)"], hand, i => { hand = i; preview(); }, "Main"),
+        chips(["Monter et descendre", "Monter seulement", "Brisé 1-5-8-10 (main gauche)"], motif, i => { motif = i; preview(); }, "Motif"));
+    } else if (mode === 1) {
+      box.append(lab("ar-r", "Tonalité"), keySelect("ar-r", rootPc, k => { rootPc = k.pc; previewRun(); }),
+        chips(["Lent (moitié)", "Vitesse réelle"], slow ? 0 : 1, i => { slow = !i; }, "Vitesse"),
+        chips(RUNS.map(r => r.n), run, i => { run = i; previewRun(); }, "Run"));
+    } else {
+      box.append(lab("ar-r", "Tonalité"), keySelect("ar-r", rootPc, k => { rootPc = k.pc; }), tempoEl(),
+        chips(["I – vi – IV – V", "I – IV – V – I", "I – I7 – IV – iv"], prog, i => { prog = i; if (playing) start(); }, "Progression"),
+        chips(["Main gauche 1-5-8-5", "Main gauche 1-5-8-10"], lhPat, i => { lhPat = i; if (playing) start(); }, "Motif"));
+    }
+    if (mode === 0) preview(); else if (mode === 1) previewRun(); else { kb.clear(); fmap = {}; kb.refresh(); $("#as", st).innerHTML = "<b>Progression arpégée</b>main gauche en arpège, main droite en accords"; }
+  }
+  function arpSeq() {
+    const ivs = ARPQ[q], k = keyByPc(rootPc), name = k.en + ARPQN[q];
+    if (motif === 2) {
+      const b = 36 + rootPc, third = ivs[1] === 3 ? 15 : 16;
+      const ns = [b, b + 7, b + 12, b + third, b + 12, b + 7];
+      return {name, items: ns.map(m => ({m, hand: "MG", f: null})), info: "fondamentale, quinte, octave, dixième"};
+    }
+    const build = (base, o, hd) => { const ns = []; for (let i = 0; i < o; i++) ivs.forEach(iv => ns.push(base + 12 * i + iv)); ns.push(base + 12 * o); const f = arpFingers(ns, ivs, hd); return ns.map((m, i) => ({m, hand: hd, f: f ? f[i] : null})); };
+    let up;
+    if (hand === 2) {
+      const lb = 36 + rootPc, lh = build(lb, 1, "MG").slice(0, -1), rh = build(lb + 12 + (rootPc > 4 ? 0 : 12), oct, "MD");
+      up = [...lh, ...rh];
+    } else if (hand === 1) up = build(36 + rootPc + (rootPc > 6 ? -12 : 0) + 12 * (oct === 1 ? 1 : 0), oct, "MG");
+    else { let b = 60 + rootPc; if (b > 66) b -= 12; up = build(b, oct, "MD"); }
+    if (motif === 1) return {name, items: up};
+    const down = up.slice(0, -1).reverse();
+    return {name, items: [...up, ...down]};
+  }
+  function preview() {
+    const S = arpSeq(); kb.clear(); fmap = {};
+    S.items.forEach(x => { if (x.f) fmap[x.m] = x.f; kb.light(x.m, x.hand === "MG" ? "l-tsoft" : "l-soft"); });
+    kb.refresh();
+    const anyNull = S.items.some(x => !x.f);
+    $("#ab", st).textContent = S.name;
+    $("#as", st).innerHTML = `<b>${S.items.length} notes</b>${S.info || (anyNull ? "départ sur une touche noire à la main gauche : pouce sur les blanches, 3 ou 4 sur les noires" : "les chiffres sur les touches sont les doigtés")}`;
+  }
+  function start() {
+    if (mode === 1) return startRun();
+    if (mode === 2) return startProg();
+    const S = arpSeq(), step = 1 / sub, L = Math.ceil(S.items.length * step) + 1;
+    const ev = S.items.map((x, i) => ({t: i * step, play: (tm, spb) => {
+      AU.note(tm, [freq(x.m)], Math.max(step * spb * 1.6, 0.25), i === 0 ? 0.5 : 0.42);
+      TR.at(tm, () => { preview(); kb.light(x.m, x.hand === "MG" ? "l-teal" : "l-coral"); $("#ab", st).textContent = x.f || SHARP_FR[x.m % 12]; $("#as", st).innerHTML = `<b>${SHARP_FR[x.m % 12]}</b>${x.hand === "MG" ? "main gauche" : "main droite"}${x.f ? " · doigt " + x.f : ""}`; });
+    }}));
+    for (let b = 0; b < L; b++) ev.push({t: b, play: tm => AU.click(tm, b === 0 ? 1 : 0)});
+    TR.start({bpm, L, events: ev, onStop: () => { setPlaying(false); preview(); }});
+    setPlaying(true);
+  }
+  function runNotes() {
+    const R = RUNS[run], base = 60 + rootPc - (rootPc > 6 ? 12 : 0);
+    let t = 0; const ns = [];
+    if (R.pre) t = 2;
+    R.notes.forEach(([o, d]) => { ns.push({m: base + o, t, d}); t += d; });
+    return {R, base, ns, end: t};
+  }
+  function previewRun() {
+    const {R, ns} = runNotes(); kb.clear(); fmap = {};
+    ns.forEach((x, i) => { fmap[x.m] = i + 1; kb.light(x.m, x.m < 60 ? "l-tsoft" : "l-soft"); });
+    kb.refresh();
+    $("#ab", st).textContent = keyByPc(rootPc).en; $("#as", st).innerHTML = `<b>${R.n}</b>${R.f} · les numéros donnent l'ordre des notes`;
+  }
+  function startRun() {
+    const {R, base, ns, end} = runNotes(), sp = slow ? 2 : 1, ev = [];
+    const chordAt = (t, [off, ivs, top], dur) => ev.push({t, play: (tm, spb) => {
+      const r = base + off, notes = ivs.map(x => r + x).concat(top ? [base + top] : []);
+      AU.note(tm, [...notes, bassNote((rootPc + off) % 12, 36)].map(freq), dur * spb, 0.42);
+      TR.at(tm, () => { previewRun(); notes.forEach(m => kb.light(m, "l-gold")); kb.light(bassNote((rootPc + off) % 12, 36), "l-teal"); });
+    }});
+    if (R.pre) chordAt(0, R.pre, 2);
+    ns.forEach((x, i) => ev.push({t: x.t, play: (tm, spb) => { AU.note(tm, [freq(x.m)], Math.max(x.d * spb * 1.3, 0.12), 0.45); TR.at(tm, () => { kb.light(x.m, "l-coral"); $("#ab", st).textContent = i + 1; }); }}));
+    const land = Math.ceil(end);
+    chordAt(land, R.land, 3);
+    ev.push({t: land + 3, play: tm => TR.at(tm, () => TR.stop())});
+    TR.start({bpm: 80 / sp, L: land + 4, events: ev, onStop: () => { setPlaying(false); previewRun(); }});
+    setPlaying(true);
+  }
+  function startProg() {
+    const items = [[[0,0,"maj",4,,,"I"],[5,9,"m",4,,,"vi"],[3,5,"maj",4,,,"IV"],[4,7,"maj",4,,,"V"]],
+      [[0,0,"maj",4,,,"I"],[3,5,"maj",4,,,"IV"],[4,7,"maj",4,,,"V"],[0,0,"maj",4,,,"I"]],
+      [[0,0,"maj",4,,,"I"],[0,0,"7",4,,,"I7"],[3,5,"maj",4,,,"IV"],[3,5,"m",4,,,"iv"]]][prog];
+    const R = realize(keyByPc(rootPc), items), ev = [];
+    R.chords.forEach(c => {
+      const b = bassNote(c.root % 12, 36), third = Q[c.q].iv[1] === 3 ? 15 : 16;
+      const pat = lhPat ? [0, 7, 12, third, 12, 7, 12, 7] : [0, 7, 12, 7, 0, 7, 12, 7];
+      ev.push({t: c.t, play: (tm, spb) => { AU.note(tm, c.rh.map(m => freq(m + 12)), 4 * spb * 0.95, 0.3); TR.at(tm, () => { $("#ab", st).textContent = c.name; $("#as", st).innerHTML = `<b>${c.rn}</b>${lhPat ? "1-5-8-10" : "1-5-8-5"} à la main gauche`; }); }});
+      pat.forEach((o, i) => ev.push({t: c.t + i / 2, play: (tm, spb) => { AU.note(tm, [freq(b + o)], spb * 0.6, 0.45); TR.at(tm, () => { kb.clear(); fmap = {}; c.rh.forEach(m => kb.light(m + 12, "l-gold")); kb.light(b + o, "l-teal"); kb.refresh(); }); }}));
+    });
+    TR.start({bpm, L: R.len, events: ev, onStop: () => setPlaying(false)});
+    setPlaying(true);
+  }
+  controls();
+}
+
 /* ---------------------------------------------------------------- routage */
 const VIEWS = {oreille: viewOreille, nashville: viewNashville, voicings: viewVoicings, reharm: viewReharm, mineur: viewMineur,
-  formules: viewFormules, shout: viewShout, pedale: viewPedale, mains: viewMains, carnet: viewCarnet};
+  formules: viewFormules, shout: viewShout, pedale: viewPedale, mains: viewMains, carnet: viewCarnet, arpeges: viewArpeges};
 const main = $("#main");
 function route() {
   TR.stop(true);

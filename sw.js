@@ -1,4 +1,4 @@
-const CACHE = "piano-gospel-65ee0a4cce";
+const CACHE = "piano-gospel-5c0cfbb9c9";
 const CORE = [
  "./",
  "index.html",

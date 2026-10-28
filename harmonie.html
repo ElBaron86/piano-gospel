@@ -466,7 +466,7 @@ function Keyboard(lo, hi, opt = {}) {
       const mm = +m, black = isBlack(mm);
       const show = mode !== "none" && (!black || lit[mm]);
       labels[mm].textContent = show ? name(mm) : "";
-      labels[mm].classList.toggle("on", !!lit[mm] && !black);
+      labels[mm].classList.toggle("on", !!lit[mm] && !black && !/soft|dim/.test(lit[mm]));
     }
   }
   function light(m, cls) {
